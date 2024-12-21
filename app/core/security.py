@@ -6,7 +6,7 @@ api_key_header = APIKeyHeader(name=settings.API_KEY_NAME, auto_error=True)
 
 async def get_api_key(api_key_header: str = Security(api_key_header)) -> str:
     """Validate API key from header."""
-    if api_key_header != settings.api_key:
+    if api_key_header != settings.API_KEY:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Invalid or missing API Key"

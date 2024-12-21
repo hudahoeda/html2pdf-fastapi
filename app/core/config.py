@@ -3,7 +3,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     # API Authentication
-    API_KEY: str  # Coolify provides this
+    API_KEY: str
     API_KEY_NAME: str = "x-api-key"
     
     # Server settings
@@ -22,7 +22,12 @@ class Settings(BaseSettings):
     }
 
     def __init__(self, **kwargs):
+        # If API_KEYS is provided but API_KEY is not, use API_KEYS value
+        if 'API_KEYS' in kwargs and 'API_KEY' not in kwargs:
+            kwargs['API_KEY'] = kwargs['API_KEYS']
+            
         super().__init__(**kwargs)
+        
         # Ensure PORT is an integer
         if isinstance(self.PORT, str):
             self.PORT = int(self.PORT)
