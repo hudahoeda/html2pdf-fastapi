@@ -14,6 +14,7 @@ A FastAPI-based service that converts HTML content to PDF using Selenium and Chr
 - Docker support for easy deployment
 - Comprehensive error handling
 - Poetry for dependency management
+- Coolify deployment support
 
 ## Prerequisites
 
@@ -31,10 +32,10 @@ git clone https://github.com/yourusername/html2pdf-fastapi.git
 cd html2pdf-fastapi
 ```
 
-2. Create a `.env` file with your API keys:
+2. Create a `.env` file with your API key:
 ```bash
 cp .env.example .env
-# Edit .env with your actual API keys
+# Edit .env with your actual API key
 ```
 
 3. Build and run with Docker Compose:
@@ -62,10 +63,10 @@ curl -sSL https://install.python-poetry.org | python3 -
 poetry install
 ```
 
-4. Configure API keys:
+4. Configure API key:
 ```bash
 cp .env.example .env
-# Edit .env with your actual API keys
+# Edit .env with your actual API key
 ```
 
 5. Run the application:
@@ -197,16 +198,22 @@ The service can be configured using environment variables in your `.env` file:
 
 ```bash
 # API Configuration
-API_KEYS=["your-api-key-1","your-api-key-2"]
-API_KEY_NAME=x-api-key
+API_KEY=your-api-key-here  # Your API key for authentication
+API_KEY_NAME=x-api-key     # Header name for the API key (default: x-api-key)
 
 # Service Configuration
-PORT=8000  # The port number for the FastAPI service
-HOST=0.0.0.0  # The host address to bind to
-
-# Timezone Configuration
-TZ=UTC  # Your timezone (e.g., "America/New_York", "Europe/London", "Asia/Tokyo")
+PORT=8000    # The port number for the FastAPI service
+HOST=0.0.0.0 # The host address to bind to
+TZ=UTC       # Your timezone (e.g., "America/New_York", "Europe/London")
 ```
+
+#### Coolify Deployment
+When deploying with Coolify, the environment variables are automatically managed. Coolify will set:
+- `API_KEYS` (which will be automatically mapped to `API_KEY`)
+- `API_KEY_NAME`
+- `PORT`
+- `TZ`
+- Additional Coolify-specific variables
 
 #### Port Configuration
 The service port can be configured in two ways:
@@ -249,8 +256,8 @@ html2pdf-fastapi/
 │   │       └── endpoints/
 │   │           └── pdf.py
 │   ├── core/
-│   │   ├── config.py
-│   │   └── security.py
+│   │   ├── config.py    # Configuration and environment settings
+│   │   └── security.py  # API key validation
 │   ├── models/
 │   │   └── pdf_options.py
 │   ├── services/
@@ -270,10 +277,11 @@ poetry run pytest
 
 ## Security Considerations
 
-1. API Keys:
-   - Store API keys securely
-   - Rotate keys regularly
+1. API Key:
+   - Store API key securely
+   - Use a strong, unique API key
    - Use HTTPS in production
+   - Consider rotating keys periodically
 
 2. Input Validation:
    - All input is validated using Pydantic models
@@ -285,7 +293,7 @@ poetry run pytest
 
 ## Production Deployment
 
-1. Update API keys in `.env`
+1. Update API key in `.env`
 2. Configure appropriate security measures
 3. Set up HTTPS
 4. Configure logging
