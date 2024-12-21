@@ -13,6 +13,7 @@ A FastAPI-based service that converts HTML content to PDF using Selenium and Chr
 - CORS support
 - Docker support for easy deployment
 - Comprehensive error handling
+- Poetry for dependency management
 
 ## Prerequisites
 
@@ -20,7 +21,7 @@ A FastAPI-based service that converts HTML content to PDF using Selenium and Chr
 - Or:
   - Python 3.9+
   - Google Chrome browser
-  - pip (Python package manager)
+  - Poetry (Python package manager)
 
 ## Quick Start with Docker
 
@@ -51,15 +52,14 @@ git clone https://github.com/yourusername/html2pdf-fastapi.git
 cd html2pdf-fastapi
 ```
 
-2. Create and activate a virtual environment:
+2. Install Poetry (if not already installed):
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+curl -sSL https://install.python-poetry.org | python3 -
 ```
 
 3. Install dependencies:
 ```bash
-pip install -r requirements.txt
+poetry install
 ```
 
 4. Configure API keys:
@@ -70,7 +70,30 @@ cp .env.example .env
 
 5. Run the application:
 ```bash
-uvicorn app.main:app --reload
+poetry run uvicorn app.main:app --reload
+```
+
+## Development Setup
+
+1. Install development dependencies:
+```bash
+poetry install --with dev
+```
+
+2. Set up pre-commit hooks:
+```bash
+poetry run pre-commit install
+```
+
+3. Format code:
+```bash
+poetry run black .
+poetry run isort .
+```
+
+4. Run linting:
+```bash
+poetry run flake8
 ```
 
 ## API Usage
@@ -167,6 +190,54 @@ curl -X POST "http://localhost:8000/api/v1/generate-pdf" \
 - `viewport`: Custom viewport settings
 - `waitForTimeout`: Wait time after page load
 
+### Environment Configuration
+
+#### Service Configuration
+The service can be configured using environment variables in your `.env` file:
+
+```bash
+# API Configuration
+API_KEYS=["your-api-key-1","your-api-key-2"]
+API_KEY_NAME=x-api-key
+
+# Service Configuration
+PORT=8000  # The port number for the FastAPI service
+HOST=0.0.0.0  # The host address to bind to
+
+# Timezone Configuration
+TZ=UTC  # Your timezone (e.g., "America/New_York", "Europe/London", "Asia/Tokyo")
+```
+
+#### Port Configuration
+The service port can be configured in two ways:
+
+1. Using the `.env` file:
+```bash
+PORT=3000  # Change to your desired port
+```
+
+2. Using environment variables when starting Docker Compose:
+```bash
+PORT=3000 docker-compose up -d
+```
+
+#### Timezone Configuration
+The timezone will be automatically detected from your system. However, you can override it in several ways:
+
+1. Using the `.env` file:
+```bash
+TZ=America/New_York
+```
+
+2. Using environment variables:
+```bash
+TZ=Europe/London docker-compose up -d
+```
+
+3. System default (automatically detected)
+
+Available timezones can be found in the [tz database](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones).
+
 ## Development
 
 ### Project Structure
@@ -187,13 +258,14 @@ html2pdf-fastapi/
 │   └── main.py
 ├── docker-compose.yml
 ├── Dockerfile
-├── requirements.txt
+├── pyproject.toml
+├── poetry.lock
 └── README.md
 ```
 
 ### Running Tests
 ```bash
-pytest
+poetry run pytest
 ```
 
 ## Security Considerations
@@ -223,9 +295,11 @@ pytest
 
 1. Fork the repository
 2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
+3. Install development dependencies: `poetry install --with dev`
+4. Make your changes
+5. Run tests: `poetry run pytest`
+6. Format code: `poetry run black . && poetry run isort .`
+7. Create a Pull Request
 
 ## License
 

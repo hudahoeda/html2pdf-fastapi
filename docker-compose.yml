@@ -4,15 +4,30 @@ services:
   html2pdf:
     build: .
     ports:
-      - "8000:8000"
+      - "${PORT:-8000}:8000"
     volumes:
       - ./.env:/app/.env:ro
     environment:
-      - TZ=UTC
+      - TZ=${TZ:-UTC}
+      - PORT=8000
+      - HOST=0.0.0.0
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8000/"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s 
+      start_period: 40s
+    entrypoint: |
+      sh -c '
+      if [ -z "$$TZ" ]; then
+        # Try to get system timezone on Linux
+        if [ -f /etc/timezone ]; then
+          export TZ=$$(cat /etc/timezone)
+        # Try to get system timezone on macOS
+        elif [ -f /etc/localtime ]; then
+          export TZ=$$(readlink /etc/localtime | sed "s#/usr/share/zoneinfo/##")
+        fi
+      fi
+      poetry run uvicorn app.main:app --host $$HOST --port $$PORT
+      '
