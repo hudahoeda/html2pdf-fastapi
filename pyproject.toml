@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "html2pdf-fastapi"
+version = "0.1.0"
+description = "Service to generate HTML to PDF"
+authors = ["Ahmad M. Huda <anotherhuda@gmail.com>"]
+license = "MIT License"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13"
+fastapi = "^0.115.6"
+uvicorn = "^0.34.0"
+selenium = "^4.27.1"
+python-multipart = "^0.0.20"
+webdriver-manager = "^4.0.2"
+pydantic = "^2.10.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
