@@ -9,9 +9,9 @@ class Settings(BaseSettings):
     PORT: int = 8000
     TZ: str = "UTC"
 
-    @property
-    def model_config(self):
-        return {"env_file": ".env"}
+    model_config = {
+        "env_file": ".env"
+    }
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
