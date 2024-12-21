@@ -1,7 +1,8 @@
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, HTTPException, Query, Depends
 from fastapi.responses import Response, JSONResponse
 from app.services.pdf_service import PDFService
 from app.models.pdf_options import PDFRequest
+from app.core.security import get_api_key
 
 router = APIRouter()
 pdf_service = PDFService()
@@ -9,6 +10,7 @@ pdf_service = PDFService()
 @router.post("/generate-pdf")
 async def generate_pdf(
     request: PDFRequest,
+    api_key: str = Depends(get_api_key),
     return_base64: bool = Query(
         False,
         description="If true, returns the PDF as a base64 string in JSON response"
@@ -28,6 +30,8 @@ async def generate_pdf(
     - And more
     
     Returns either a PDF file or base64 encoded PDF string based on return_base64 parameter.
+    
+    Requires a valid API key in the x-api-key header.
     """
     try:
         pdf_content = pdf_service.generate_pdf(request)
