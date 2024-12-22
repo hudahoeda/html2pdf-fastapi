@@ -5,7 +5,6 @@ description = "Service to generate HTML to PDF"
 authors = ["Ahmad M. Huda <anotherhuda@gmail.com>"]
 license = "MIT License"
 readme = "README.md"
-package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.9"
