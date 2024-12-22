@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.v1.endpoints import pdf
+from fastapi.staticfiles import StaticFiles
+from app.api.v1.endpoints import pdf, canva
 
 app = FastAPI(
     title="HTML to PDF Service",
@@ -17,8 +18,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include PDF router
+# Mount static directories
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Include routers
 app.include_router(pdf.router, prefix="/api/v1", tags=["pdf"])
+app.include_router(canva.router, prefix="/api/v1", tags=["canva"])
 
 @app.get("/")
 async def root():
