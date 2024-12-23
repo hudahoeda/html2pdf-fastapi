@@ -39,7 +39,8 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock* ./
 
 # Install dependencies
-RUN poetry install --no-root --no-dev
+RUN poetry install --no-root --no-dev && \
+    pip install itsdangerous
 
 # Copy the rest of the application
 COPY . .
