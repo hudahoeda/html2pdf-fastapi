@@ -76,17 +76,70 @@ class PDFService:
     def _wait_for_fonts(self, driver, timeout: int = 10):
         """Wait for all fonts to be loaded on the page."""
         try:
-            script = """
-                return Promise.all(
-                    Array.from(document.fonts.values())
-                        .filter(font => !font.loaded)
-                        .map(font => font.load())
-                ).then(() => true).catch(() => false);
+            # First wait for Google Fonts stylesheet to load
+            script_google_fonts = """
+                return new Promise((resolve) => {
+                    const links = document.querySelectorAll('link[href*="fonts.googleapis.com"]');
+                    if (links.length === 0) {
+                        resolve(true);
+                        return;
+                    }
+                    
+                    const promises = Array.from(links).map(link => {
+                        return new Promise((resolve) => {
+                            if (link.sheet) {
+                                resolve();
+                            } else {
+                                link.onload = () => resolve();
+                                link.onerror = () => resolve();
+                            }
+                        });
+                    });
+                    
+                    Promise.all(promises).then(() => {
+                        // Add a small delay to ensure fonts start loading
+                        setTimeout(() => resolve(true), 100);
+                    });
+                });
             """
             WebDriverWait(driver, timeout).until(
-                lambda d: d.execute_script(script)
+                lambda d: d.execute_script(script_google_fonts)
+            )
+            logger.info("Google Fonts stylesheet loaded")
+
+            # Then wait for all fonts to be loaded
+            script_fonts = """
+                return new Promise((resolve) => {
+                    if (document.fonts && document.fonts.ready) {
+                        document.fonts.ready.then(() => {
+                            // Additional check for each font load state
+                            const fontPromises = Array.from(document.fonts).map(font => font.load());
+                            Promise.all(fontPromises)
+                                .then(() => {
+                                    // Add a small delay to ensure complete font loading
+                                    setTimeout(() => resolve(true), 100);
+                                })
+                                .catch(() => resolve(false));
+                        });
+                    } else {
+                        // Fallback for browsers not supporting document.fonts
+                        setTimeout(() => resolve(true), 1000);
+                    }
+                });
+            """
+            WebDriverWait(driver, timeout).until(
+                lambda d: d.execute_script(script_fonts)
             )
             logger.info("All fonts loaded successfully")
+
+            # Final verification of font loading
+            verification_script = """
+                return Array.from(document.fonts).every(font => font.status === 'loaded');
+            """
+            if not driver.execute_script(verification_script):
+                logger.warning("Font verification failed, some fonts might not be loaded correctly")
+                raise TimeoutException("Font verification failed")
+
         except TimeoutException:
             logger.warning("Timeout while waiting for fonts to load")
             raise TimeoutException("Timeout while waiting for fonts to load")
