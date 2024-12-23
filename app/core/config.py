@@ -11,6 +11,14 @@ class Settings(BaseSettings):
     PORT: int = 8000
     TZ: str = "UTC"
 
+    # Redis settings
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+
+    # Worker settings
+    WORKER_CONCURRENCY: int = 2
+    WORKER_MAX_TASKS_PER_CHILD: int = 50
+
     # Coolify specific variables
     SOURCE_COMMIT: Optional[str] = None
     COOLIFY_URL: Optional[str] = None

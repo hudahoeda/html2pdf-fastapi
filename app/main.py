@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.v1.endpoints import pdf
+from fastapi.staticfiles import StaticFiles
+from app.api.v1.endpoints import pdf, monitor
 
 app = FastAPI(
     title="HTML to PDF Service",
@@ -17,8 +18,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include PDF router
+# Include routers
 app.include_router(pdf.router, prefix="/api/v1", tags=["pdf"])
+app.include_router(monitor.router, prefix="/api/v1/monitor", tags=["monitor"])
 
 @app.get("/")
 async def root():
