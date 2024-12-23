@@ -1,20 +1,24 @@
+version: '3.8'
+
 services:
   html2pdf:
     build: .
     ports:
-      - "${PORT:-8000}:8000"
+      - "${PORT}:${PORT}"
     volumes:
       - ./.env:/app/.env:ro
     environment:
       - TZ=${TZ:-UTC}
-      - PORT=8000
-      - HOST=0.0.0.0
+      - PORT=${PORT}
+      - HOST=${HOST:-0.0.0.0}
       - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - WORKER_CONCURRENCY=${WORKER_CONCURRENCY:-2}
     depends_on:
       - redis
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/"]
+      test: ["CMD", "curl", "-f", "http://localhost:${PORT}/"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -22,10 +26,8 @@ services:
     entrypoint: |
       sh -c '
       if [ -z "$$TZ" ]; then
-        # Try to get system timezone on Linux
         if [ -f /etc/timezone ]; then
           export TZ=$$(cat /etc/timezone)
-        # Try to get system timezone on macOS
         elif [ -f /etc/localtime ]; then
           export TZ=$$(readlink /etc/localtime | sed "s#/usr/share/zoneinfo/##")
         fi
@@ -40,6 +42,8 @@ services:
     environment:
       - TZ=${TZ:-UTC}
       - REDIS_HOST=redis
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - WORKER_CONCURRENCY=${WORKER_CONCURRENCY:-2}
     depends_on:
       - redis
     restart: unless-stopped
@@ -52,13 +56,13 @@ services:
           export TZ=$$(readlink /etc/localtime | sed "s#/usr/share/zoneinfo/##")
         fi
       fi
-      poetry run celery -A app.core.celery_app worker --loglevel=info --concurrency=${WORKER_CONCURRENCY:-2}
+      poetry run celery -A app.core.celery_app worker --loglevel=info --concurrency=$$WORKER_CONCURRENCY
       '
 
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT:-6379}:6379"
     volumes:
       - redis_data:/data
     restart: unless-stopped
