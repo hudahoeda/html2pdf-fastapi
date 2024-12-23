@@ -73,6 +73,27 @@ class PDFService:
         
         return page_sizes.get(format or PageFormat.A4)
 
+    def _wait_for_fonts(self, driver, timeout: int = 10):
+        """Wait for all fonts to be loaded on the page."""
+        try:
+            script = """
+                return Promise.all(
+                    Array.from(document.fonts.values())
+                        .filter(font => !font.loaded)
+                        .map(font => font.load())
+                ).then(() => true).catch(() => false);
+            """
+            WebDriverWait(driver, timeout).until(
+                lambda d: d.execute_script(script)
+            )
+            logger.info("All fonts loaded successfully")
+        except TimeoutException:
+            logger.warning("Timeout while waiting for fonts to load")
+            raise TimeoutException("Timeout while waiting for fonts to load")
+        except Exception as e:
+            logger.error(f"Error while waiting for fonts: {str(e)}")
+            raise
+
     def generate_pdf(self, request: PDFRequest) -> Union[bytes, str]:
         temp_dir = tempfile.mkdtemp()
         temp_html = Path(temp_dir) / "temp.html"
@@ -105,9 +126,14 @@ class PDFService:
                     raise
                 logger.warning("Page load timeout, attempting to continue...")
 
+            # Wait for fonts if requested
+            options = request.options or PDFOptions()
+            if options.waitForFonts:
+                logger.info("Waiting for fonts to load...")
+                self._wait_for_fonts(driver, timeout=options.timeout / 1000 if options.timeout else 10)
+
             # Generate PDF
             logger.info("Generating PDF")
-            options = request.options or PDFOptions()
             page_size = self._get_page_size(options.format, options.width, options.height)
             
             print_options = {
