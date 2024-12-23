@@ -1,7 +1,6 @@
-from fastapi import APIRouter, Request, Depends, Query
-from fastapi.responses import HTMLResponse
+from fastapi import APIRouter, Request, Depends, HTTPException, Form, Response, status
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-from app.core.security import get_api_key
 from app.core.celery_app import celery_app
 from datetime import datetime
 from app.core.config import settings
@@ -9,28 +8,60 @@ from app.core.config import settings
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
 
-def verify_api_key(api_key: str = Query(None), header_api_key: str = Depends(get_api_key)) -> str:
-    """Verify API key from either query parameter or header"""
-    if api_key and api_key == settings.API_KEY:
-        return api_key
-    return header_api_key
+def verify_session(request: Request):
+    """Verify session has valid API key"""
+    api_key = request.session.get("api_key")
+    if not api_key or api_key != settings.API_KEY:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or missing API key"
+        )
+    return api_key
 
 @router.get("/", response_class=HTMLResponse)
-async def monitor_page(
+async def monitor_page(request: Request):
+    # Check if user is logged in
+    if request.session.get("api_key") != settings.API_KEY:
+        return templates.TemplateResponse("login.html", {
+            "request": request,
+            "error": request.query_params.get("error")
+        })
+    return templates.TemplateResponse("monitor.html", {"request": request})
+
+@router.post("/login")
+async def login(
     request: Request,
-    api_key: str = Query(None, description="API key (can also be provided in header)"),
-    _: str = Depends(verify_api_key)
+    response: Response,
+    api_key: str = Form(...)
 ):
-    return templates.TemplateResponse("monitor.html", {
-        "request": request,
-        "api_key": api_key
-    })
+    if api_key == settings.API_KEY:
+        request.session["api_key"] = api_key
+        return RedirectResponse(
+            url="/api/v1/monitor/",
+            status_code=status.HTTP_302_FOUND
+        )
+    return templates.TemplateResponse(
+        "login.html",
+        {
+            "request": request,
+            "error": "Invalid API key"
+        },
+        status_code=status.HTTP_401_UNAUTHORIZED
+    )
+
+@router.get("/logout")
+async def logout(request: Request):
+    request.session.clear()
+    return RedirectResponse(
+        url="/api/v1/monitor/",
+        status_code=status.HTTP_302_FOUND
+    )
 
 @router.get("/stats/{stat_type}")
 async def get_stats(
     stat_type: str,
-    api_key: str = Query(None),
-    _: str = Depends(verify_api_key)
+    request: Request,
+    _: str = Depends(verify_session)
 ):
     i = celery_app.control.inspect()
     active = i.active() or {}
@@ -51,8 +82,8 @@ async def get_stats(
 
 @router.get("/jobs")
 async def get_jobs(
-    api_key: str = Query(None),
-    _: str = Depends(verify_api_key)
+    request: Request,
+    _: str = Depends(verify_session)
 ):
     # Get all task keys
     task_keys = celery_app.backend.client.keys("celery-task-meta-*")
@@ -101,7 +132,7 @@ async def get_jobs(
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{job["duration"]}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm">
                 <button 
-                    hx-get="/api/v1/monitor/job/{job["id"]}?api_key={api_key if api_key else ''}"
+                    hx-get="/api/v1/monitor/job/{job["id"]}"
                     hx-target="#job-details"
                     onclick="document.getElementById('job-modal').classList.remove('hidden')"
                     class="text-indigo-600 hover:text-indigo-900">
@@ -116,8 +147,8 @@ async def get_jobs(
 @router.get("/job/{job_id}")
 async def get_job_details(
     job_id: str,
-    api_key: str = Query(None),
-    _: str = Depends(verify_api_key)
+    request: Request,
+    _: str = Depends(verify_session)
 ):
     result = celery_app.backend.get(f"celery-task-meta-{job_id}")
     if not result:

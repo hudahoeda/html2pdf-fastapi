@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from starlette.middleware.sessions import SessionMiddleware
 from app.api.v1.endpoints import pdf, monitor
+from app.core.config import settings
+import secrets
 
 app = FastAPI(
     title="HTML to PDF Service",
@@ -16,6 +19,14 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+)
+
+# Add session middleware
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=secrets.token_urlsafe(32),
+    session_cookie="html2pdf_session",
+    max_age=3600  # 1 hour
 )
 
 # Include routers
