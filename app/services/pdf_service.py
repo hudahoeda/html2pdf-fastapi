@@ -246,21 +246,28 @@ class PDFService:
                 logger.warning(f"Error while cleaning temporary files: {str(e)}") 
 
     def compress_pdf(self, file_path: str, compression_level: int) -> bytes:
-        """Compress a PDF file with the specified compression level (1-5)"""
+        """
+        Compress a PDF file with the specified compression level (0-9).
+        
+        Level 0: No compression
+        Level 1-3: Light compression
+        Level 4-6: Medium compression
+        Level 7-8: High compression
+        Level 9: Maximum compression
+        """
         try:
             from pypdf import PdfReader, PdfWriter
             
-            # Map our compression levels (1-5) to quality settings (100-20)
-            # and zlib compression levels (1-9)
-            compression_settings = {
-                1: {"quality": 80, "zlib_level": 6},
-                2: {"quality": 60, "zlib_level": 7},
-                3: {"quality": 40, "zlib_level": 8},
-                4: {"quality": 30, "zlib_level": 9},
-                5: {"quality": 20, "zlib_level": 9}
-            }
+            # No compression for level 0
+            if compression_level == 0:
+                with open(file_path, 'rb') as f:
+                    return f.read()
             
-            settings = compression_settings.get(compression_level, compression_settings[3])
+            # Calculate image quality based on compression level
+            # Level 0: Original quality (100%)
+            # Level 9: Lowest quality (20%)
+            # Linear interpolation between these points
+            image_quality = max(20, 100 - (compression_level * 10))
             
             # Create a temporary file for the output
             with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp_file:
@@ -268,29 +275,47 @@ class PDFService:
                 writer = PdfWriter()
                 reader = PdfReader(file_path)
                 
+                logger.info(f"Processing PDF with compression level {compression_level}")
+                logger.info(f"Image quality: {image_quality}%")
+                logger.info(f"Zlib level: {compression_level}")
+                
                 # Add all pages to writer
                 for page in reader.pages:
                     writer.add_page(page)
                 
-                # First pass: compress all images
-                for page in writer.pages:
-                    for img in page.images:
+                # First pass: compress all images if compression level > 0
+                if compression_level > 0:
+                    for page_num, page in enumerate(writer.pages, 1):
+                        for img_num, img in enumerate(page.images, 1):
+                            try:
+                                logger.info(f"Compressing image {img_num} on page {page_num}")
+                                img.replace(
+                                    img.image,
+                                    quality=image_quality
+                                )
+                            except Exception as e:
+                                logger.warning(f"Failed to compress image {img_num} on page {page_num}: {str(e)}")
+                                continue
+                
+                # Second pass: apply content stream compression if level > 0
+                if compression_level > 0:
+                    for page_num, page in enumerate(writer.pages, 1):
                         try:
-                            img.replace(
-                                img.image,
-                                quality=settings["quality"]
-                            )
+                            logger.info(f"Compressing content stream for page {page_num}")
+                            page.compress_content_streams(level=compression_level)
                         except Exception as e:
-                            logger.warning(f"Failed to compress image: {str(e)}")
+                            logger.warning(f"Failed to compress content stream for page {page_num}: {str(e)}")
                             continue
                 
-                # Second pass: apply content stream compression
-                for page in writer.pages:
+                # Additional optimization for high compression levels (7-9)
+                if compression_level >= 7:
                     try:
-                        page.compress_content_streams(level=settings["zlib_level"])
+                        logger.info("Applying additional optimizations")
+                        writer.remove_unreferenced_objects()
+                        writer.compress_streams = True
+                        writer.compress_content_streams = True
                     except Exception as e:
-                        logger.warning(f"Failed to compress content stream: {str(e)}")
-                        continue
+                        logger.warning(f"Failed to apply additional optimizations: {str(e)}")
                 
                 # Write the compressed PDF
                 writer.write(tmp_file.name)
@@ -301,6 +326,14 @@ class PDFService:
 
                 # Clean up
                 os.unlink(tmp_file.name)
+                
+                # Log compression results
+                original_size = os.path.getsize(file_path)
+                compressed_size = len(compressed_data)
+                reduction = ((original_size - compressed_size) / original_size) * 100
+                logger.info(f"Original size: {original_size / 1024:.2f}KB")
+                logger.info(f"Compressed size: {compressed_size / 1024:.2f}KB")
+                logger.info(f"Size reduction: {reduction:.1f}%")
                 
                 return compressed_data
 

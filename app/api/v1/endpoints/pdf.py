@@ -64,8 +64,8 @@ async def generate_pdf(
 async def compress_pdf(
     file: UploadFile = File(...),
     compression_level: CompressionLevel = Query(
-        CompressionLevel.MEDIUM,
-        description="Compression level from 1 (minimum) to 5 (maximum)"
+        CompressionLevel.LEVEL_5,
+        description="Compression level from 0 (no compression) to 9 (maximum compression)"
     ),
     api_key: str = Depends(get_api_key),
     return_base64: bool = Query(
