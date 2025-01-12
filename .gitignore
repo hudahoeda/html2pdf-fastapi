@@ -5,3 +5,4 @@ __pycache__/
 *$py.class
 /html2pdf-fastapi/
 /static/
+/venv/
