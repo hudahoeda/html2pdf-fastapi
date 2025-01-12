@@ -134,3 +134,22 @@ class PDFRequest(BaseModel):
 
     class Config:
         use_enum_values = True 
+
+class CompressionLevel(int, Enum):
+    NONE = 0
+    LEVEL_1 = 1
+    LEVEL_2 = 2
+    LEVEL_3 = 3
+    LEVEL_4 = 4
+    LEVEL_5 = 5
+    LEVEL_6 = 6
+    LEVEL_7 = 7
+    LEVEL_8 = 8
+    MAXIMUM = 9
+
+class PDFCompressionRequest(BaseModel):
+    file_path: str
+    compression_level: CompressionLevel = Field(
+        default=CompressionLevel.LEVEL_5,
+        description="Compression level from 0 (no compression) to 9 (maximum compression)"
+    ) 
