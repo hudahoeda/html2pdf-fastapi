@@ -47,6 +47,51 @@ class MarkdownRequest(BaseModel):
         description="Color theme for the document",
         examples=["light", "dark"]
     )
+    font_family: Optional[str] = Field(
+        None,
+        description="Main font family for the document",
+        examples=["Arial, sans-serif", "Times New Roman, serif", "Roboto, sans-serif"]
+    )
+    font_size: Optional[str] = Field(
+        None,
+        description="Base font size for the document",
+        examples=["12pt", "14px", "1em"]
+    )
+    heading_font_family: Optional[str] = Field(
+        None,
+        description="Font family for headings",
+        examples=["Georgia, serif", "Helvetica, sans-serif"]
+    )
+    line_height: Optional[str] = Field(
+        None,
+        description="Line height for the document",
+        examples=["1.6", "1.5", "2"]
+    )
+    margin_top: Optional[str] = Field(
+        None,
+        description="Top margin of the document",
+        examples=["20px", "1in", "2cm"]
+    )
+    margin_right: Optional[str] = Field(
+        None,
+        description="Right margin of the document",
+        examples=["20px", "1in", "2cm"]
+    )
+    margin_bottom: Optional[str] = Field(
+        None,
+        description="Bottom margin of the document",
+        examples=["20px", "1in", "2cm"]
+    )
+    margin_left: Optional[str] = Field(
+        None,
+        description="Left margin of the document",
+        examples=["20px", "1in", "2cm"]
+    )
+    content_width: Optional[str] = Field(
+        None,
+        description="Width of the content area",
+        examples=["800px", "21cm", "8.5in"]
+    )
 
 def convert_markdown_to_html(
     markdown_content: str, 
@@ -54,7 +99,16 @@ def convert_markdown_to_html(
     header: Optional[str] = None,
     footer: Optional[str] = None,
     add_toc: bool = False,
-    theme: str = "light"
+    theme: str = "light",
+    font_family: Optional[str] = None,
+    font_size: Optional[str] = None,
+    heading_font_family: Optional[str] = None,
+    line_height: Optional[str] = None,
+    margin_top: Optional[str] = None,
+    margin_right: Optional[str] = None,
+    margin_bottom: Optional[str] = None,
+    margin_left: Optional[str] = None,
+    content_width: Optional[str] = None
 ) -> str:
     """Helper function to convert markdown to styled HTML"""
     # Convert Markdown to HTML with extended features
@@ -108,6 +162,14 @@ def convert_markdown_to_html(
         }
     }[theme]
 
+    # Default settings
+    default_font_family = "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    default_heading_font = default_font_family
+    default_font_size = "12pt"
+    default_line_height = "1.6"
+    default_margin = "20px"
+    default_content_width = "800px"
+
     # Create a complete HTML document with styling
     return f"""
     <!DOCTYPE html>
@@ -120,18 +182,19 @@ def convert_markdown_to_html(
                 color-scheme: {theme};
             }}
             body {{
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-                line-height: 1.6;
-                font-size: 12pt;
+                font-family: {font_family or default_font_family};
+                line-height: {line_height or default_line_height};
+                font-size: {font_size or default_font_size};
                 color: {colors["text"]};
                 background-color: {colors["bg"]};
-                margin: 0;
-                padding: 20px;
+                /* Remove fixed margins to allow PDF options to control them */
+                margin: {margin_top or default_margin} {margin_right or default_margin} {margin_bottom or default_margin} {margin_left or default_margin};
+                padding: 0;
             }}
             .container {{
-                max-width: 1200px;
-                margin: 0 auto;
-                padding: 0 20px;
+                width: 100%;
+                /* Remove fixed margins */
+                padding: 0;
             }}
             .header {{
                 position: sticky;
@@ -141,6 +204,7 @@ def convert_markdown_to_html(
                 padding: 1rem 0;
                 margin-bottom: 2rem;
                 z-index: 100;
+                width: 100%;
             }}
             .footer {{
                 margin-top: 2rem;
@@ -149,16 +213,17 @@ def convert_markdown_to_html(
                 text-align: center;
                 font-size: 0.875rem;
                 color: {colors["blockquote"]};
+                width: 100%;
             }}
             .markdown-content {{
+                /* Allow content width to be controlled while keeping it centered */
+                width: {content_width or default_content_width};
                 margin: 0 auto;
-                max-width: 800px;
                 background-color: {colors["bg"]};
-                border-radius: 8px;
-                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-                overflow: hidden;
+                padding: 0;
             }}
             h1, h2, h3, h4, h5, h6 {{
+                font-family: {heading_font_family or font_family or default_heading_font};
                 font-weight: 600;
                 line-height: 1.25;
                 margin-top: 1.5em;
@@ -296,21 +361,34 @@ def convert_markdown_to_html(
             }}
             @media print {{
                 body {{
-                    padding: 0;
+                    /* Reset all margins for PDF generation */
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    background-color: transparent !important;
                 }}
-                .header, .footer {{
-                    position: fixed;
-                    left: 0;
-                    right: 0;
-                }}
-                .header {{
-                    top: 0;
-                }}
-                .footer {{
-                    bottom: 0;
+                .container {{
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    width: 100% !important;
                 }}
                 .markdown-content {{
-                    margin: 3rem 0;
+                    /* Reset content constraints for PDF */
+                    width: 100% !important;
+                    max-width: none !important;
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    background-color: transparent !important;
+                }}
+                .header, .footer {{
+                    display: none !important;
+                }}
+                h1:first-of-type {{
+                    margin-top: 0 !important;
+                    padding-top: 0 !important;
+                }}
+                /* Hide default headers and footers */
+                title, head {{
+                    display: none !important;
                 }}
             }}
         </style>
@@ -361,7 +439,16 @@ async def markdown_to_html(
             header=request.header,
             footer=request.footer,
             add_toc=request.add_table_of_contents,
-            theme=request.theme
+            theme=request.theme,
+            font_family=request.font_family,
+            font_size=request.font_size,
+            heading_font_family=request.heading_font_family,
+            line_height=request.line_height,
+            margin_top=request.margin_top,
+            margin_right=request.margin_right,
+            margin_bottom=request.margin_bottom,
+            margin_left=request.margin_left,
+            content_width=request.content_width
         )
         return HTMLResponse(content=html_content)
     except Exception as e:

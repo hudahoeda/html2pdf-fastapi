@@ -3,24 +3,25 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>My Document</title>
+    <title>Grading</title>
     <style>
         :root {
             color-scheme: light;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: Arial, sans-serif;
             line-height: 1.6;
             font-size: 12pt;
             color: #333333;
             background-color: #ffffff;
-            margin: 0;
-            padding: 20px;
+            /* Remove fixed margins to allow PDF options to control them */
+            margin: 20px 20px 20px 20px;
+            padding: 0;
         }
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
+            width: 100%;
+            /* Remove fixed margins */
+            padding: 0;
         }
         .header {
             position: sticky;
@@ -30,6 +31,7 @@
             padding: 1rem 0;
             margin-bottom: 2rem;
             z-index: 100;
+            width: 100%;
         }
         .footer {
             margin-top: 2rem;
@@ -38,16 +40,17 @@
             text-align: center;
             font-size: 0.875rem;
             color: #718096;
+            width: 100%;
         }
         .markdown-content {
+            /* Allow content width to be controlled while keeping it centered */
+            width: 800px;
             margin: 0 auto;
-            max-width: 800px;
             background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            overflow: hidden;
+            padding: 0;
         }
         h1, h2, h3, h4, h5, h6 {
+            font-family: Arial, serif;
             font-weight: 600;
             line-height: 1.25;
             margin-top: 1.5em;
@@ -185,370 +188,158 @@
         }
         @media print {
             body {
-                padding: 0;
+                /* Reset all margins for PDF generation */
+                margin: 0 !important;
+                padding: 0 !important;
+                background-color: transparent !important;
             }
-            .header, .footer {
-                position: fixed;
-                left: 0;
-                right: 0;
-            }
-            .header {
-                top: 0;
-            }
-            .footer {
-                bottom: 0;
+            .container {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
             }
             .markdown-content {
-                margin: 3rem 0;
+                /* Reset content constraints for PDF */
+                width: 100% !important;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background-color: transparent !important;
+            }
+            .header, .footer {
+                display: none !important;
+            }
+            h1:first-of-type {
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+            }
+            /* Hide default headers and footers */
+            title, head {
+                display: none !important;
             }
         }
     </style>
 </head>
 <body>
-    <div class="header"><div class="header">My Header</div></div>
+    <div class="header"><div style='display: flex; align-items: center; justify-content: space-between; padding: 0 20px;'><div style='display: flex; align-items: center; gap: 12px;'><svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-graduation-cap'><path d='M22 10v6M2 10l10-5 10 5-10 5z'/><path d='M6 12v5c3 3 9 3 12 0v-5'/></svg><h1 style='margin: 0; font-size: 24px;'>Grading Report</h1></div></div></div>
     <div class="container">
         <div class="markdown-content">
             <h3><strong>Experience Drafting</strong></h3>
 <hr>
-<h3><strong>Title:</strong> Digital Strategist</h3>
-<p><strong>Institution:</strong> Magnus Digital Indonesia</p>
-<p><strong>Period:</strong> Agu 2023 - Current</p>
+<h3><strong>Title:</strong> Admin Operational</h3>
+<p><strong>Institution:</strong> Muria Sport Kudus</p>
+<p><strong>Period:</strong> Oct 2021 - Sekarang</p>
 <ol>
 <li>
 <p><strong>What did you do?</strong></p>
-<p>Designed and pitched high-impact marketing strategy tailored to meet the objectives of potential clients.</p>
+<p>Manage more than 5 stores in the marketplace starting from optimizing the store organically, receiving orders to resolving complaints</p>
 <ul>
-<li><strong>Result:</strong> Increased client acquisition rate by an estimate of 50%</li>
-<li><strong>Justification:</strong> Estimation is based on yearly business review, evaluating the amount and value of client currently handled by agency. There was an increase in client amount on team that involved the Digital Strategist team</li>
-<li><strong>Specific Impact or Method:</strong> </li>
+<li><strong>Result:</strong> resulting in a 21.42% increase in sales in December 2024.</li>
+<li><strong>Justification:</strong> Resulting was based on sales report which is November sales higher than December </li>
+<li><strong>Specific Impact or Method:</strong> Specific Method: Optimize, knowing customer needs through communication</li>
 </ul>
 </li>
 <li>
 <p><strong>What did you do?</strong></p>
-<p>Conducted market research and gathered digital insights to develop strategies and optimize existing marketing executions.</p>
+<p>Responsible for finding new customers and building good relationships through the WhatsApp channel</p>
 <ul>
-<li><strong>Result:</strong> Improved campaign relevance by an estimate of 25%</li>
-<li><strong>Justification:</strong> Estimation is based  on project evaluations and client feedback. There was an increment in positive responses regarding campaign strategies in recent projects compared to earlier ones.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
+<li><strong>Result:</strong> resulting average sales increase 6.13% in 2024</li>
+<li><strong>Justification:</strong> Resulting was based on sales reports during 2024</li>
+<li><strong>Specific Impact or Method:</strong> Specific Method: Knowing customer needs through communication and Negotiate</li>
 </ul>
 </li>
 <li>
 <p><strong>What did you do?</strong></p>
-<p>Collaborated with multidisciplinary teams, including creatives, analysts, and advertisers, to execute seamless campaigns.</p>
+<p>Making a marketing content in video type on TikTok and WhatsApp</p>
 <ul>
-<li><strong>Result:</strong> Increased project working effectiveness by an estimate of 50%</li>
-<li><strong>Justification:</strong> Based on project completion time requirements, recent projects have shown a significant improvement in efficiency, reducing the time needed to complete tasks by up to one week compared to previous projects.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Optimized existing client strategies by refining strategic approaches and enhancing marketing execution.</p>
-<ul>
-<li><strong>Result:</strong> Extended partnership contracts with 5+ clients</li>
-<li><strong>Justification:</strong> Based on the amount of client extended their contract after receiving good performance in the previous period. Clients include Enervon C, Danone, Puck, Arla, CIMB, and more</li>
-<li><strong>Specific Impact or Method:</strong> </li>
+<li><strong>Result:</strong> Increase impression by an estimated 100% and conversion by an estimated 25%</li>
+<li><strong>Justification:</strong> Resulting was based on comment and replies increase 100% and conversion 25% compared to Image type of content</li>
+<li><strong>Specific Impact or Method:</strong> Specific Impact: Get new customer and drive conversion</li>
 </ul>
 </li>
 </ol>
 <hr>
-<h3><strong>Title:</strong> Marketing Intern</h3>
-<p><strong>Institution:</strong> Luxehouze Indonesia</p>
-<p><strong>Period:</strong> Jan 2023 - Apr 2023</p>
-<ol>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Assisted in managing social media platforms for evergreen content and collaboration campaigns.</p>
-<ul>
-<li><strong>Result:</strong> Increased user engagement by an estimate of 20%</li>
-<li><strong>Justification:</strong> Estimation is based on internal weekly marketing reports indicate an increase in engagement rates in recent months compared to earlier periods.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Assisted in managing the execution of marketing campaigns, from building strategy to handling operations and evaluation.</p>
-<ul>
-<li><strong>Result:</strong> Increased lead generation from offline campaign by an estimate of 30%</li>
-<li><strong>Justification:</strong> Estimation based on the number of leads successfully collected from recent offline campaigns shows a significant increase compared to earlier campaigns.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Collaborated with copywriters, creatives, social media, and product teams to execute marketing operations and campaigns.</p>
-<ul>
-<li><strong>Result:</strong> Increase asset quality by an estimate of 20%</li>
-<li><strong>Justification:</strong> Previously, asset briefs were provided directly without proper quality checking. I improved the process by delivering clearer briefs to the team and implementing quality control, resulting in an estimated 35+ consistent assets produced over three months, contributing to 25% of the total assets created for the entire year.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Optimized the flow of marketing execution from database management to final deliverables.</p>
-<ul>
-<li><strong>Result:</strong> Delivered assets 1 day ahead of the deadline</li>
-<li><strong>Justification:</strong> Previously, last-minute deliveries were common,but by streamlining communication and follow up tasks, I ensured smoother and more efficient execution.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-</ol>
-<hr>
-<h3><strong>Title:</strong> Marketing and Product Intern</h3>
-<p><strong>Institution:</strong> Allo Bank</p>
-<p><strong>Period:</strong> Apr 2022 - Dec 2023</p>
-<ol>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Established partnerships with CT Corp business partners to implement effective loyalty marketing campaigns.</p>
-<ul>
-<li><strong>Result:</strong> Partnered with 30+ business partner within 6 months</li>
-<li><strong>Justification:</strong> Previously, we were only able to achieve partnerships with 2 business partners due to an ineffective approach. However, I successfully increased this to 5 business partners per month through improved strategies and more effective outreach.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Optimized the Allo Bank app for loyalty programs by strategizing app development, conducting User Acceptance Testing (UAT) and overseeing deployment.</p>
-<ul>
-<li><strong>Result:</strong> Reducing issue related to loyalty program by an estimate of 25%</li>
-<li><strong>Justification:</strong> Estimation based on customer reports, the number of issue report related to the loyalty program has decreased compared to the previous period.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Collaborated with Partnership, Marketing, and IT teams, as well as business partners, to develop and optimize loyalty marketing campaigns.</p>
-<ul>
-<li><strong>Result:</strong> Increased project working effectiveness by an estimate of 50%</li>
-<li><strong>Justification:</strong> Estimation based on monthly performance review. Majority of users feels the increase of project working effectiveness with my position in the team</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Created and completed documentation to establish and support partnership loyalty marketing campaigns and product development.</p>
-<ul>
-<li><strong>Result:</strong> Improved document preparation efficiency by an estimate of 50%</li>
-<li><strong>Justification:</strong> Estimation based on the number of documents successfully completed in the recent period show a significant increase compared to the earlier period.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-</ol>
-<hr>
-<h3><strong>Title:</strong> Vice President</h3>
-<p><strong>Institution:</strong> SDAC FEB UI</p>
-<p><strong>Period:</strong> Nov 2020 - Oct 2021</p>
-<ol>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Established SDAC branding for 2020, covering visual elements, persona, and communication and PR approaches.</p>
-<ul>
-<li><strong>Result:</strong> Increase organization exposure by 50%</li>
-<li><strong>Justification:</strong> Estimation based on a student organizational survey conducted by the BEM FEB UI subdivision indicate that a higher number of students have become more familiar with SDAC in the recent period compared to the previous one.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Strategized a one-year plan for the SDAC student program, including key learnings, speakers, events, rules and incentives, timelines, and internal operations.</p>
-<ul>
-<li><strong>Result:</strong> Increase student acquisition by an estimate of 50%</li>
-<li><strong>Justification:</strong> Estimation is based on SDAC internal database comparison. The result shows that the numbers of student participated in the recent year are significantly higher than the previous year</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Executed the student program, overseeing, evaluating, and optimizing it on a weekly basis.</p>
-<ul>
-<li><strong>Result:</strong> Achieve 90% student satisfaction score for the program</li>
-<li><strong>Justification:</strong> Based on monthly student satisfactory assessment for the program. The result showed that majority of student satisfied with the program and can see continuous improvement made in the program</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Collaborated with internal teams, including Finance, Partnership, Creative, and Operations, to run and develop the organization.</p>
-<ul>
-<li><strong>Result:</strong> Achieved an estimated 85% organizational performance score</li>
-<li><strong>Justification:</strong> Estimation based on organization performance assessment at the end of running period conducted by BEM FEB UI subdivision. The result showed that SDAC is performing really well for the one year period</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-</ol>
-<hr>
-<h3><strong>Title:</strong> Event Manager</h3>
-<p><strong>Institution:</strong> UI CISE 2021</p>
-<p><strong>Period:</strong> Oct 2021 - Mar 2021</p>
-<ol>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Developed event concepts, including key topics, rundowns, segments, potential key speakers, and also developed partnership proposals for the event.</p>
-<ul>
-<li><strong>Result:</strong> Achieve 90% audience satisfaction score for the event</li>
-<li><strong>Justification:</strong> Based on post event participant engagement survey. The result showed that majority of participant satisfied and engaged with the event.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Established partnerships with key speakers by negotiating terms, providing speaker briefs, and adjusting event details to align with speaker needs.</p>
-<ul>
-<li><strong>Result:</strong> Partnered with 6+ notable speakers from top company with only total of 1 mio budget</li>
-<li><strong>Justification:</strong> In the previous period, the event could only partnered with 2 to 3 speakers. With more strategic and effective partnership approach, we successfully increased this number to 6 speakers for the event by only spending 50% of our budget.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Coordinated with the Partnership, Operation, and Finance teams to finalize and execute the event plan.</p>
-<ul>
-<li><strong>Result:</strong> Finalized event preparation 1 day ahead of the deadline</li>
-<li><strong>Justification:</strong> In the previous period, last-minute preparations were common. By implementing more effective communication and streamlined coordination, we successfully improved preparation efficiency.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Executed live events by ensuring alignment with the planned rundown, maintaining audience engagement, and collecting evaluations for further optimization.</p>
-<ul>
-<li><strong>Result:</strong> Maintained event execution with a 0% issue report rate</li>
-<li><strong>Justification:</strong> Based on the number of issues reported during the event, the results showed zero reports from both staff and audience, reflecting a good execution and effective management.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-</ol>
-<hr>
-<h3><strong>Title:</strong> Event Social Media Manager</h3>
-<p><strong>Institution:</strong> AIESEC in UI</p>
-<p><strong>Period:</strong> July 2021 - Dec 2021</p>
-<ol>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Developed branding for GIC event, encomassing logo, key visual, persona and brand identity.</p>
-<ul>
-<li><strong>Result:</strong> Engaged 20+ teams to participate in the event</li>
-<li><strong>Justification:</strong> Successfully attracted 20+ teams to participate in the event by showcasing strong and engaging branding that is relevant with the audience.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Developed comprehensive social media strategies, content plans, and collaborative posts, while managing day-to-day content execution</p>
-<ul>
-<li><strong>Result:</strong> Increased Instagram followers by an estimate of 10%</li>
-<li><strong>Justification:</strong> The GIC event social media communication contributed to increasing AIESEC Leadseries&rsquo; Instagram followers by approximately 500 followers, resulting in a 10% growth in the follower base.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Coordinated with the design team, partnership, and the event teams to ensure the delivery of content asset, information, and communication</p>
-<ul>
-<li><strong>Result:</strong> Maintained posting frequency of 1 post per day</li>
-<li><strong>Justification:</strong> Based on the content managed, successfully posted 30+ pieces in one month, maintaining a consistent posting frequency of one post per day with only 3 team members.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Setting social media measurement, gather report and insight weekly, and make optimization</p>
-<ul>
-<li><strong>Result:</strong> Increase engagement rate by an estimate of 20% </li>
-<li><strong>Justification:</strong> Based on the increase in likes and comments from the earlier period to the recent period, GIC ER rate has shown significant improvement.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-</ol>
-<hr>
-<h3><strong>Title:</strong> Full Stack Digital Marketing Program</h3>
+<h3><strong>Title:</strong> Project Manager at SEO</h3>
 <p><strong>Institution:</strong> RevoU</p>
-<p><strong>Period:</strong> Aug 2022 - Sep 2022</p>
+<p><strong>Period:</strong> 12/1/2024</p>
 <ol>
 <li>
 <p><strong>What did you do?</strong></p>
-<p>Worked for group project and individual assignment, delivered digital marketing strategies across key areas, including performance ads, organic social media, SEO, and CRM.</p>
+<p>Decided topic research</p>
 <ul>
-<li><strong>Result:</strong> Achieve 99.8% scores for individual assignments and projects throughout the camp</li>
-<li><strong>Justification:</strong> The score, based on the assignment of various marketing projects from week 1 to week 14, resulted in an overall performance score of 99.8% out of 100%.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
+<li><strong>Result:</strong> Get a good feedback from instructor about topic decision</li>
+<li><strong>Justification:</strong> Topic decision based on competitor research using Ahrefs and Alsoasked</li>
+<li><strong>Specific Impact or Method:</strong> Specific Method: by using Ahrefs and Alsoasked for research competitor website</li>
 </ul>
 </li>
 <li>
 <p><strong>What did you do?</strong></p>
-<p>Collaborated with cross-functional team members to develop project strategies and ensure effective execution</p>
+<p>Made a content strategy</p>
 <ul>
-<li><strong>Result:</strong> Achieved the 1st place as a winning team in the project competition</li>
-<li><strong>Justification:</strong> The score, based on the total points accumulated from team project pitches 1 to 4, shows that my team achieved the highest overall score among all teams in the Madrid section.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Delivered group project pitch presentations to digital marketing experts accross different fields and industries.</p>
-<ul>
-<li><strong>Result:</strong> Achieve an estimate of 85% presentation performance rate</li>
-<li><strong>Justification:</strong> Estimation based on given feedback regarding presentation performance from Team Leader. In overall the feedback are positive and no spesific improvement requested.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
+<li><strong>Result:</strong> Get a good feedback from instructor about WordPress content writing technique</li>
+<li><strong>Justification:</strong> Content strategy based on SERP Analysis and create content on WordPress</li>
+<li><strong>Specific Impact or Method:</strong> Specific Method: Doing research based on SERP Analysis and decided the queries of content then make a content on WordPress</li>
 </ul>
 </li>
 </ol>
 <hr>
-<h3><strong>Title:</strong> Startup Academy Compfest</h3>
-<p><strong>Institution:</strong> Compfest</p>
-<p><strong>Period:</strong> Aug 2022 - Sep 2022</p>
+<h3><strong>Title:</strong> Performance Team at Google Ads Project</h3>
+<p><strong>Institution:</strong> RevoU</p>
+<p><strong>Period:</strong> 11/1/2024</p>
 <ol>
 <li>
 <p><strong>What did you do?</strong></p>
-<p>Developed startup concept, conducted market analysis, branding, business model, key operations, and a comprehensive development plan.</p>
+<p>Collaborated with Team to decide and executed Google Ads Campaigns and Optimizing for Laoek Catering</p>
 <ul>
-<li><strong>Result:</strong> Chosen as one of the participating team out of 10 teams for Startup Academy from 300+ registrants</li>
-<li><strong>Justification:</strong> Our startup team was selected for the Startup Academy, overcoming strong competition. The selection was based on our startup concept, initial strategy, and team background</li>
-<li><strong>Specific Impact or Method:</strong> </li>
+<li><strong>Result:</strong> There was a 1.9% increase in CTR, a 0.9% increase in CVR and 4 leads were obtained.</li>
+<li><strong>Justification:</strong> Referring to the Google Ads dashboard, there was an increase in CTR and CVR after reducing keywords that had no traffic, revising the headline, and adding keywords that were in line with the Landing Page.</li>
+<li><strong>Specific Impact or Method:</strong> Specific Method: directly target keywords for related target</li>
 </ul>
 </li>
+</ol>
+<hr>
+<h3><strong>Title:</strong> Creative Team at Meta Ads Project</h3>
+<p><strong>Institution:</strong> RevoU</p>
+<p><strong>Period:</strong> 10/1/2024</p>
+<ol>
 <li>
 <p><strong>What did you do?</strong></p>
-<p>Collaborated with the startup team consist of IT, Operation, and Marketing to develop comprehensive plan throughout the camp</p>
+<p>Collaborated with the design team to create campaign assets</p>
 <ul>
-<li><strong>Result:</strong> <br>
-Finalized comprehensive strategy and presentation materials 1 day ahead of the deadline</li>
-<li><strong>Justification:</strong> Despite limited team members and resources, we successfully delivered comprehensive strategies each week, meeting tight deadlines and maintaining high-quality output.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
-</ul>
-</li>
-<li>
-<p><strong>What did you do?</strong></p>
-<p>Delivered startup pitch presentations to venture capitalists and experts in technology and business.</p>
-<ul>
-<li><strong>Result:</strong> Achieved an estimated 90% score in the pitch presentation, ranking 2nd place in the pitch competition.</li>
-<li><strong>Justification:</strong> Estimation based on pitch presentation scoring, which assessed strategy, presentation delivery, and Q&amp;A responses, indicate the team&rsquo;s strong performance across all areas.</li>
-<li><strong>Specific Impact or Method:</strong> </li>
+<li><strong>Result:</strong> Delivered asset one day before the deadline</li>
+<li><strong>Justification:</strong> Delivery time was compared to previous campaigns where delays were common, showing the new workflow eliminated bottlenecks and improved asset delivery.</li>
+<li><strong>Specific Impact or Method:</strong> Specific Impact: Streamlined workflow, allowing more time for final reviews.</li>
 </ul>
 </li>
 </ol>
 <hr>
 <h3><strong>Final Experience (CV Ready Statement)</strong></h3>
 <hr>
-<h3><strong>Title:</strong> Digital Strategist</h3>
+<h3><strong>Title:</strong> Admin Operational</h3>
+<ol>
+<li>Managed more than 5 stores in the marketplace by optimizing the store operations and resolving complaints, resulting in a 21.42% increase in sales in December 2024 compared to November, by understanding customer needs through effective communication</li>
+<li>Responsible for finding new customers and building strong relationships through the WhatsApp channel, achieving an average sales increase of 6.13% in 2024 based on annual sales reports, by identifying customer needs through communication and negotiation.</li>
+<li>Designed marketing content on TikTok and WhatsApp to increase brand impressions and drive conversion, resulting in attracting new customers, even though specific engagement metrics were not tracked due to a lack of tools in the office.</li>
+</ol>
 <hr>
-<h3><strong>Title:</strong> Marketing Intern</h3>
+<h3><strong>Title:</strong> Project Manager at SEO</h3>
+<ol>
+<li>Conducted comprehensive topic research, which received excellent feedback from instructors, leveraging competitor analysis using Ahrefs and Alsoasked to ensure relevant content decisions.</li>
+<li>Developed a content strategy based on in-depth SERP analysis, implementing effective WordPress content writing techniques that garnered positive feedback from instructors for enhancing online visibility.</li>
+</ol>
 <hr>
-<h3><strong>Title:</strong> Marketing and Product Intern</h3>
+<h3><strong>Title:</strong> Performance Team Member - Google Ads Project</h3>
+<ol>
+<li>Collaborated with the team to plan and implement optimized Google Ads campaigns for Laoek Catering, resulting in a 1.9% increase in CTR, a 0.9% increase in CVR, and the acquisition of four new leads through keyword refinement and strategic revisions.</li>
+</ol>
 <hr>
-<h3><strong>Title:</strong> Vice President</h3>
-<hr>
-<h3><strong>Title:</strong> Event Manager</h3>
-<hr>
-<h3><strong>Title:</strong> Event Social Media Manager</h3>
-<hr>
-<h3><strong>Title:</strong> Full Stack Digital Marketing Program</h3>
-<hr>
-<h3><strong>Title:</strong> Startup Academy Compfest</h3>
+<h3><strong>Title:</strong> Creative Team Member - Meta Ads Project</h3>
+<ol>
+<li>Collaborated closely with the design team to produce high-quality campaign assets, delivering them one day ahead of deadline, thus eliminating previous delays and enhancing overall team efficiency.</li>
+</ol>
 <hr>
         </div>
     </div>
-    <div class="footer"><div class="footer">Page 1 of 1</div></div>
+    
 </body>
 </html>
