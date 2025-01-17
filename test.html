@@ -1,0 +1,345 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Grading</title>
+    <style>
+        :root {
+            color-scheme: light;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            font-size: 12pt;
+            color: #333333;
+            background-color: #ffffff;
+            /* Remove fixed margins to allow PDF options to control them */
+            margin: 20px 20px 20px 20px;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            /* Remove fixed margins */
+            padding: 0;
+        }
+        .header {
+            position: sticky;
+            top: 0;
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+            z-index: 100;
+            width: 100%;
+        }
+        .footer {
+            margin-top: 2rem;
+            padding: 1rem 0;
+            border-top: 1px solid #e2e8f0;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #718096;
+            width: 100%;
+        }
+        .markdown-content {
+            /* Allow content width to be controlled while keeping it centered */
+            width: 800px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            padding: 0;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: Arial, serif;
+            font-weight: 600;
+            line-height: 1.25;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+            color: #2d3748;
+        }
+        h1 { font-size: 2em; margin-top: 0; }
+        h2 { font-size: 1.5em; }
+        h3 { font-size: 1.25em; }
+        h4 { font-size: 1em; }
+        h5 { font-size: 0.875em; }
+        h6 { font-size: 0.85em; }
+        p {
+            margin: 1em 0;
+        }
+        ul, ol {
+            margin: 1em 0;
+            padding-left: 2em;
+        }
+        li + li {
+            margin-top: 0.25em;
+        }
+        li > p {
+            margin: 0.5em 0;
+        }
+        blockquote {
+            margin: 1em 0;
+            padding: 0.5em 1em;
+            color: #718096;
+            border-left: 4px solid #e2e8f0;
+            background-color: #f8fafc;
+        }
+        code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            padding: 0.2em 0.4em;
+            margin: 0;
+            font-size: 85%;
+            background-color: #f7fafc;
+            border-radius: 3px;
+        }
+        pre {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            padding: 1em;
+            overflow: auto;
+            font-size: 85%;
+            line-height: 1.45;
+            background-color: #f7fafc;
+            border-radius: 6px;
+            margin: 1em 0;
+        }
+        pre code {
+            padding: 0;
+            margin: 0;
+            font-size: 100%;
+            background-color: transparent;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1em 0;
+            overflow-x: auto;
+            display: block;
+        }
+        table th, table td {
+            padding: 0.5em 1em;
+            border: 1px solid #e2e8f0;
+        }
+        table tr:nth-child(2n) {
+            background-color: #f8fafc;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+        }
+        hr {
+            height: 1px;
+            border: none;
+            background-color: #e2e8f0;
+            margin: 2em 0;
+        }
+        strong {
+            color: #2d3748;
+            font-weight: 600;
+        }
+        .true {
+            color: #48bb78;
+            font-weight: bold;
+        }
+        .false {
+            color: #f56565;
+            font-weight: bold;
+        }
+        .experience-section {
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5em;
+            margin: 1.5em 0;
+        }
+        .experience-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1em;
+        }
+        .experience-title {
+            margin: 0;
+            color: #2d3748;
+        }
+        .experience-meta {
+            color: #718096;
+            font-size: 0.875em;
+        }
+        .experience-content {
+            margin-top: 1em;
+        }
+        .toc {
+            background-color: #f8fafc;
+            padding: 1.5em;
+            border-radius: 8px;
+            margin: 1.5em 0;
+        }
+        .toc ul {
+            list-style-type: none;
+            padding-left: 1em;
+        }
+        .toc a {
+            color: #3182ce;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            color: #2c5282;
+            text-decoration: underline;
+        }
+        @media print {
+            body {
+                /* Reset all margins for PDF generation */
+                margin: 0 !important;
+                padding: 0 !important;
+                background-color: transparent !important;
+            }
+            .container {
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+            .markdown-content {
+                /* Reset content constraints for PDF */
+                width: 100% !important;
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background-color: transparent !important;
+            }
+            .header, .footer {
+                display: none !important;
+            }
+            h1:first-of-type {
+                margin-top: 0 !important;
+                padding-top: 0 !important;
+            }
+            /* Hide default headers and footers */
+            title, head {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header"><div style='display: flex; align-items: center; justify-content: space-between; padding: 0 20px;'><div style='display: flex; align-items: center; gap: 12px;'><svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='lucide lucide-graduation-cap'><path d='M22 10v6M2 10l10-5 10 5-10 5z'/><path d='M6 12v5c3 3 9 3 12 0v-5'/></svg><h1 style='margin: 0; font-size: 24px;'>Grading Report</h1></div></div></div>
+    <div class="container">
+        <div class="markdown-content">
+            <h3><strong>Experience Drafting</strong></h3>
+<hr>
+<h3><strong>Title:</strong> Admin Operational</h3>
+<p><strong>Institution:</strong> Muria Sport Kudus</p>
+<p><strong>Period:</strong> Oct 2021 - Sekarang</p>
+<ol>
+<li>
+<p><strong>What did you do?</strong></p>
+<p>Manage more than 5 stores in the marketplace starting from optimizing the store organically, receiving orders to resolving complaints</p>
+<ul>
+<li><strong>Result:</strong> resulting in a 21.42% increase in sales in December 2024.</li>
+<li><strong>Justification:</strong> Resulting was based on sales report which is November sales higher than December </li>
+<li><strong>Specific Impact or Method:</strong> Specific Method: Optimize, knowing customer needs through communication</li>
+</ul>
+</li>
+<li>
+<p><strong>What did you do?</strong></p>
+<p>Responsible for finding new customers and building good relationships through the WhatsApp channel</p>
+<ul>
+<li><strong>Result:</strong> resulting average sales increase 6.13% in 2024</li>
+<li><strong>Justification:</strong> Resulting was based on sales reports during 2024</li>
+<li><strong>Specific Impact or Method:</strong> Specific Method: Knowing customer needs through communication and Negotiate</li>
+</ul>
+</li>
+<li>
+<p><strong>What did you do?</strong></p>
+<p>Making a marketing content in video type on TikTok and WhatsApp</p>
+<ul>
+<li><strong>Result:</strong> Increase impression by an estimated 100% and conversion by an estimated 25%</li>
+<li><strong>Justification:</strong> Resulting was based on comment and replies increase 100% and conversion 25% compared to Image type of content</li>
+<li><strong>Specific Impact or Method:</strong> Specific Impact: Get new customer and drive conversion</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3><strong>Title:</strong> Project Manager at SEO</h3>
+<p><strong>Institution:</strong> RevoU</p>
+<p><strong>Period:</strong> 12/1/2024</p>
+<ol>
+<li>
+<p><strong>What did you do?</strong></p>
+<p>Decided topic research</p>
+<ul>
+<li><strong>Result:</strong> Get a good feedback from instructor about topic decision</li>
+<li><strong>Justification:</strong> Topic decision based on competitor research using Ahrefs and Alsoasked</li>
+<li><strong>Specific Impact or Method:</strong> Specific Method: by using Ahrefs and Alsoasked for research competitor website</li>
+</ul>
+</li>
+<li>
+<p><strong>What did you do?</strong></p>
+<p>Made a content strategy</p>
+<ul>
+<li><strong>Result:</strong> Get a good feedback from instructor about WordPress content writing technique</li>
+<li><strong>Justification:</strong> Content strategy based on SERP Analysis and create content on WordPress</li>
+<li><strong>Specific Impact or Method:</strong> Specific Method: Doing research based on SERP Analysis and decided the queries of content then make a content on WordPress</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3><strong>Title:</strong> Performance Team at Google Ads Project</h3>
+<p><strong>Institution:</strong> RevoU</p>
+<p><strong>Period:</strong> 11/1/2024</p>
+<ol>
+<li>
+<p><strong>What did you do?</strong></p>
+<p>Collaborated with Team to decide and executed Google Ads Campaigns and Optimizing for Laoek Catering</p>
+<ul>
+<li><strong>Result:</strong> There was a 1.9% increase in CTR, a 0.9% increase in CVR and 4 leads were obtained.</li>
+<li><strong>Justification:</strong> Referring to the Google Ads dashboard, there was an increase in CTR and CVR after reducing keywords that had no traffic, revising the headline, and adding keywords that were in line with the Landing Page.</li>
+<li><strong>Specific Impact or Method:</strong> Specific Method: directly target keywords for related target</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3><strong>Title:</strong> Creative Team at Meta Ads Project</h3>
+<p><strong>Institution:</strong> RevoU</p>
+<p><strong>Period:</strong> 10/1/2024</p>
+<ol>
+<li>
+<p><strong>What did you do?</strong></p>
+<p>Collaborated with the design team to create campaign assets</p>
+<ul>
+<li><strong>Result:</strong> Delivered asset one day before the deadline</li>
+<li><strong>Justification:</strong> Delivery time was compared to previous campaigns where delays were common, showing the new workflow eliminated bottlenecks and improved asset delivery.</li>
+<li><strong>Specific Impact or Method:</strong> Specific Impact: Streamlined workflow, allowing more time for final reviews.</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3><strong>Final Experience (CV Ready Statement)</strong></h3>
+<hr>
+<h3><strong>Title:</strong> Admin Operational</h3>
+<ol>
+<li>Managed more than 5 stores in the marketplace by optimizing the store operations and resolving complaints, resulting in a 21.42% increase in sales in December 2024 compared to November, by understanding customer needs through effective communication</li>
+<li>Responsible for finding new customers and building strong relationships through the WhatsApp channel, achieving an average sales increase of 6.13% in 2024 based on annual sales reports, by identifying customer needs through communication and negotiation.</li>
+<li>Designed marketing content on TikTok and WhatsApp to increase brand impressions and drive conversion, resulting in attracting new customers, even though specific engagement metrics were not tracked due to a lack of tools in the office.</li>
+</ol>
+<hr>
+<h3><strong>Title:</strong> Project Manager at SEO</h3>
+<ol>
+<li>Conducted comprehensive topic research, which received excellent feedback from instructors, leveraging competitor analysis using Ahrefs and Alsoasked to ensure relevant content decisions.</li>
+<li>Developed a content strategy based on in-depth SERP analysis, implementing effective WordPress content writing techniques that garnered positive feedback from instructors for enhancing online visibility.</li>
+</ol>
+<hr>
+<h3><strong>Title:</strong> Performance Team Member - Google Ads Project</h3>
+<ol>
+<li>Collaborated with the team to plan and implement optimized Google Ads campaigns for Laoek Catering, resulting in a 1.9% increase in CTR, a 0.9% increase in CVR, and the acquisition of four new leads through keyword refinement and strategic revisions.</li>
+</ol>
+<hr>
+<h3><strong>Title:</strong> Creative Team Member - Meta Ads Project</h3>
+<ol>
+<li>Collaborated closely with the design team to produce high-quality campaign assets, delivering them one day ahead of deadline, thus eliminating previous delays and enhancing overall team efficiency.</li>
+</ol>
+<hr>
+        </div>
+    </div>
+    
+</body>
+</html>
