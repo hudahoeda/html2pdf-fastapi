@@ -1,11 +1,11 @@
-# Use Python 3.9 slim image
-FROM python:3.10-slim
+# Use Python 3.12 slim image
+FROM python:3.12-slim
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     DEBIAN_FRONTEND=noninteractive \
-    POETRY_VERSION=1.7.1 \
+    POETRY_VERSION=2.4.1 \
     POETRY_HOME="/opt/poetry" \
     POETRY_VIRTUALENVS_CREATE=false \
     PORT=8000 \
@@ -40,13 +40,13 @@ WORKDIR /app
 COPY pyproject.toml poetry.lock* ./
 
 # Install dependencies
-RUN poetry install --no-root --no-dev
+RUN poetry install --without dev
 
 # Copy the rest of the application
 COPY . .
 
 # Install the project
-RUN poetry install --no-dev
+RUN poetry install --without dev
 
 # Create a non-root user
 RUN useradd -m appuser && chown -R appuser:appuser /app
